@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>1만 시간의 법칙 계산기</title>
+  <style>
+    :root{
+      --bg:#5c2ca5;
+      --card:rgba(255,255,255,.06);
+      --border:rgba(255,255,255,.12);
+      --text:#ffffff;
+      --muted:#e9d7ff;
+      --accent:#ffe100;
+      --accentText:#2a2100;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Apple SD Gothic Neo,Noto Sans KR,Malgun Gothic,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.6;
+      display:flex;
+      min-height:100vh;
+      align-items:center;
+      justify-content:center;
+    }
+    .container{
+      width:min(920px,92vw);
+      margin:48px auto;
+      text-align:center;
+    }
+    .hero img{
+      width:min(320px,80%);
+      height:auto;
+      display:block;
+      margin:0 auto 12px;
+    }
+    .subtitle{
+      opacity:.9;
+      font-size:14px;
+      margin-bottom:28px;
+    }
+    .card{
+      width:min(720px,96%);
+      margin:0 auto 18px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:28px 20px;
+      backdrop-filter: blur(4px);
+    }
+    .form-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      margin:12px 0;
+      font-size:15px;
+    }
+    input[type="text"], input[type="number"]{
+      width:230px;
+      padding:12px 14px;
+      border-radius:12px;
+      border:none;
+      background:#fff;
+      color:#111;
+      outline:none;
+    }
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button{appearance:none;margin:0}
+    .btn{
+      display:inline-flex;
+      gap:.5rem;
+      align-items:center;
+      justify-content:center;
+      padding:14px 22px;
+      border-radius:9999px;
+      border:none;
+      background:var(--accent);
+      color:var(--accentText);
+      font-weight:800;
+      cursor:pointer;
+      box-shadow:0 6px 0 rgba(0,0,0,.18);
+      transition:transform .05s ease;
+    }
+    .btn:active{ transform:translateY(2px); box-shadow:0 4px 0 rgba(0,0,0,.22); }
+    .btn.outline{
+      background:transparent;
+      color:#fff;
+      border:2px solid rgba(255,255,255,.6);
+      box-shadow:none;
+    }
+    .result{
+      margin-top:14px;
+      font-weight:900;
+      font-size:clamp(18px,3.4vw,30px);
+    }
+    .result em{ color:var(--accent); font-style:normal; }
+    .small{ font-size:13px; opacity:.9; }
+    .actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:8px; }
+    .footer{ opacity:.6; font-size:12px; margin-top:28px; }
+    .hidden{ display:none; }
+    .sr-only{
+      position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+      overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+    }
+  </style>
+</head>
+<body>
+  <main class="container" role="main">
+    <header class="hero">
+      <!-- 여기 src 경로만 당신의 이미지 파일명으로 바꿔주세요 -->
+      <img src="images/title-10000hours.png" alt="1만 시간의 법칙" />
+      <p class="subtitle">“어떤 분야의 전문가가 되기 위해서는 최소한 1만 시간의 훈련이 필요하다는 법칙.”</p>
+    </header>
+
+    <section class="card" aria-labelledby="calcTitle">
+      <h1 id="calcTitle" class="sr-only">1만 시간의 법칙 계산기</h1>
+      <form id="calcForm" autocomplete="off">
+        <div class="form-row">
+          <span>나는</span>
+          <label for="field" class="sr-only">분야</label>
+          <input id="field" name="field" type="text" required placeholder="예) 프로그래밍" />
+          <span>전문가가 될 것이다.</span>
+        </div>
+
+        <div class="form-row">
+          <span>그래서 앞으로 매일 하루에</span>
+          <label for="hours" class="sr-only">하루 훈련 시간</label>
+          <input id="hours" name="hours" type="number" min="0.1" step="0.1" required placeholder="예) 2" />
+          <span>시간씩 훈련할 것이다.</span>
+        </div>
+
+        <div class="form-row">
+          <button type="submit" class="btn">나는 매일 훈련을 해서 1만 시간이 될까?</button>
+        </div>
+      </form>
+
+      <output id="result" class="result hidden" for="field hours">
+        당신은 <em id="outField">프로그래밍</em> 전문가가 되기 위해서<br />
+        대략 <em id="outDays">0</em>일 이상 훈련하셔야 합니다 :)
+      </output>
+
+      <p id="error" class="small hidden">하루 훈련 시간을 0보다 크게 입력해 주세요.</p>
+    </section>
+
+    <div class="actions">
+      <a class="btn" href="#go">훈련하러 가기 GO! GO!</a>
+      <button type="button" class="btn outline" id="shareBtn">공유하기</button>
+    </div>
+
+    <footer class="footer">ⓒ weniv – 예제 페이지</footer>
+  </main>
+
+  <script>
+    const form = document.getElementById('calcForm');
+    const fieldEl = document.getElementById('field');
+    const hoursEl = document.getElementById('hours');
+    const resultEl = document.getElementById('result');
+    const outField = document.getElementById('outField');
+    const outDays = document.getElementById('outDays');
+    const errEl = document.getElementById('error');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const field = fieldEl.value.trim();
+      const hours = parseFloat(hoursEl.value);
+
+      if (!hours || hours <= 0) {
+        errEl.classList.remove('hidden');
+        resultEl.classList.add('hidden');
+        return;
+      }
+      errEl.classList.add('hidden');
+
+      const days = Math.ceil(10000 / hours);
+      outField.textContent = field || '전문';
+      outDays.textContent = days.toLocaleString('ko-KR');
+      resultEl.classList.remove('hidden');
+    });
+
+    document.getElementById('shareBtn').addEventListener('click', async () => {
+      const txt = `나는 매일 ${hoursEl.value || '?'}시간 훈련하면, ${fieldEl.value || '전문가'}까지 약 ${outDays.textContent || '0'}일! #1만시간의법칙`;
+      const data = { title: '1만 시간의 법칙 계산기', text: txt, url: location.href };
+      try {
+        if (navigator.share) {
+          await navigator.share(data);
+        } else {
+          await navigator.clipboard.writeText(location.href);
+          alert('링크를 복사했어요!');
+        }
+      } catch(_) {}
+    });
+  </script>
+</body>
+</html>
