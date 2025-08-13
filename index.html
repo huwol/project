@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>1만 시간의 법칙</title>
+<style>
+  /* === 폰트 정의 === */
+  @font-face {
+    font-family: "OTEnjoystoriesBA";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/OTEnjoystoriesBA.woff") format("woff");
+    font-weight: normal; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: "GmarketSansBold";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansBold.woff") format("woff");
+    font-weight: normal; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: "GmarketSansMedium";
+    src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff") format("woff");
+    font-weight: normal; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: "Noto Sans KR";
+    font-style: normal; font-weight: 400;
+    src: url("https://fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff2") format("woff2"),
+         url("https://fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.woff") format("woff"),
+         url("https://fonts.gstatic.com/ea/notosanskr/v2/NotoSansKR-Regular.otf") format("opentype");
+    font-display: swap;
+  }
+
+  :root{
+    --bg:#5c2ca5;     /* 배경 보라 */
+    --yellow:#ffe100; /* 포인트 노랑 */
+    --white:#ffffff;
+    --ink:#1b0b3a;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--white); line-height:1.6;
+    font-family:"Noto Sans KR",system-ui,-apple-system,Segoe UI,Roboto,"Apple SD Gothic Neo",Malgun Gothic,sans-serif;
+  }
+  .wrap{max-width:960px;margin:0 auto;padding:40px 20px}
+  .center{text-align:center}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+  /* ====== HERO ====== */
+  .hero{position:relative;padding:10px 0 28px}
+  .hero .badge{
+    position:relative; z-index:2;
+    width:min(420px,80%); height:auto; display:block; margin:0 auto 14px;
+  }
+  .hero .clock{
+    position:absolute; inset:auto 0 -8px 0; margin:auto;
+    width:clamp(180px,36vw,280px);
+    opacity:.5;
+    z-index:1; pointer-events:none;
+  }
+  .slogan{
+    font-family:"OTEnjoystoriesBA","Noto Sans KR",sans-serif;
+    color:var(--yellow);
+    font-size:clamp(12px,5.2vw,28px);
+    line-height:1.15;
+    letter-spacing:.3px;
+    margin:18px 0 28px;
+    text-shadow:0 2px 0 rgba(0,0,0,.15);
+  }
+
+  /* ====== 설명 ====== */
+  .rule{ position:relative; text-align:center; margin:0 auto 18px; width:min(680px,96%) }
+  .rule h2{
+    margin:0 0 8px; font-family:"GmarketSansBold","Noto Sans KR",sans-serif; font-size:20px; line-height:1.2;
+  }
+  .rule p{
+    margin:0; color:#f2eaff; opacity:.9; font-family:"GmarketSansMedium","Noto Sans KR",sans-serif;
+  }
+  .rule-quotes{
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    width:clamp(200px, 44vw, 460px);
+    opacity:.35; pointer-events:none; z-index:0;
+  }
+  .rule-text{ position:relative; z-index:1; }
+
+  /* ====== 문장형 폼 ====== */
+  .sentence{font-size:18px;text-align:center;margin:30px 0}
+  .chip-input{
+    display:inline-block; vertical-align:middle; background:#fff; color:#555;
+    border-radius:12px; padding:8px 14px; margin:0 6px; min-width:180px;
+    box-shadow:0 2px 0 rgba(0,0,0,.16) inset;
+  }
+  .chip-input input{
+    width:100%; border:0; outline:0; color:#333; background:transparent;text-align: center;opacity:.65;
+    font:600 24px/1.2 "GmarketSansMedium","Noto Sans KR",sans-serif;
+  }
+  .cta-wrap{ position:relative; width:max-content; margin:26px auto 36px; }
+  .cta{
+    display:inline-flex; align-items:center; justify-content:center;
+    margin:0; padding:14px 28px; border-radius:14px; border:0;
+    background:var(--yellow); color:var(--ink); cursor:pointer; white-space:nowrap;
+    font-family:"GmarketSansBold","Noto Sans KR",sans-serif; font-weight:900;
+    box-shadow:0 6px 0 rgba(0,0,0,.2);
+  }
+  .cta:active{ transform:translateY(2px); box-shadow:0 4px 0 rgba(0,0,0,.26) }
+  .cta-hand{
+    position:absolute; right:-56px; bottom:-10px;
+    width:clamp(24px,6vw,44px);
+    pointer-events:none;
+    filter: drop-shadow(0 2px 0 rgba(0,0,0,.25));
+  }
+
+  /* ====== 결과 (항상 보임, 가운데 정렬) ====== */
+  .result{
+    width:min(740px,96%); margin:34px auto 0; text-align:center;
+  }
+  .result .l1, .result .l2{
+    display:flex; align-items:baseline; justify-content:center;
+    gap:10px; flex-wrap:wrap; margin:0 0 6px;
+  }
+  .t-muted{
+    font-family:"GmarketSansMedium","Noto Sans KR",sans-serif;
+    font-size:22px; letter-spacing:.2px; opacity:.95;
+  }
+  .t-major{
+    font-family:"GmarketSansBold","Noto Sans KR",sans-serif;
+    font-size:clamp(28px,6vw,56px); line-height:1;
+  }
+  .days{
+    font-family:"GmarketSansBold","Noto Sans KR",sans-serif;
+    font-size:clamp(48px,12vw,96px); line-height:.95; font-weight:900;
+  }
+
+  /* ====== 하단 버튼 (네모 + 길게) ====== */
+  .actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:28px 0 40px}
+  .actions .btn{
+    padding:12px 28px; border-radius:12px; border:0; cursor:pointer;
+    font-family:"GmarketSansBold","Noto Sans KR",sans-serif; font-weight:800;
+    box-shadow:0 4px 0 rgba(0,0,0,.2);
+  }
+  .actions .btn:active{transform:translateY(2px);box-shadow:0 3px 0 rgba(0,0,0,.26)}
+  .btn-go{background:var(--yellow);color:var(--ink)}
+  .btn-share{background:#fff;color:#333}
+
+  .foot{opacity:.6;font-size:12px;text-align:center}
+
+  @media (max-width:520px){
+    .sentence{font-size:16px}
+    .chip-input{min-width:150px}
+    .hero .clock{ width:clamp(150px,42vw,220px) }
+    .t-muted{ font-size:18px }
+    .result{ width:96% }
+  }
+
+  /* === 간격 확장 === */
+  :root{
+    --space-sm: 16px;
+    --space-md: 30px;
+    --space-lg: 50px;
+    --space-xl: 72px;
+  }
+  .hero{ padding: 16px 0 var(--space-lg); }
+  .rule{ margin: 0 auto var(--space-xl); }
+  .rule h2{ margin-bottom: 12px; }
+  .sentence{ margin: var(--space-xl) 0 var(--space-lg); }
+  .chip-input{ margin: 0 8px; }
+  .cta-wrap{ margin: var(--space-md) auto var(--space-xl); }
+  .result{ margin: var(--space-xl) auto 0; }
+  .result .l1{ margin: 0 0 12px; }
+  .result .l2{ margin: 0 0 var(--space-lg); }
+  .actions{ margin: var(--space-xl) 0 var(--space-lg); }
+  .foot{ margin-top: var(--space-lg); }
+  .t-muted{ line-height: 1.4; }
+  .t-major{ line-height: 1.15; }
+  .days{ margin-top: 4px; }
+  @media (max-width: 520px){
+    :root{ --space-sm:10px; --space-md:18px; --space-lg:28px; --space-xl:40px; }
+    .result .l1{ margin-bottom: 8px; }
+  }
+
+  /* ====== 모달(추가된 부분) ====== */
+  .modal{
+    position:fixed; inset:0; display:none; place-items:center;
+    background:rgba(0,0,0,.45); z-index:999;
+  }
+  .modal.is-open{ display:grid; animation:fadeIn .18s ease-out; }
+  @keyframes fadeIn{ from{opacity:0} to{opacity:1} }
+  .modal-card{
+    width:min(680px,92vw);
+    background:#fff; color:#222;
+    border-radius:22px; padding:32px 24px 28px;
+    box-shadow:0 24px 60px rgba(0,0,0,.35);
+    text-align:center; position:relative;
+  }
+  .modal-close{
+    position:absolute; top:10px; right:12px;
+    border:0; background:transparent; font-size:26px; line-height:1;
+    cursor:pointer; color:#888;
+  }
+  .cheer-title{
+    font-family:"OTEnjoystoriesBA","Noto Sans KR",sans-serif;
+    color:var(--bg);
+    font-size:clamp(28px,5vw,54px);
+    margin:8px 0 6px;
+  }
+  .cheer-title .hearts{ letter-spacing:2px; }
+  .cheer-sub{
+    font-family:"OTEnjoystoriesBA","Noto Sans KR",sans-serif;
+    color:#5a2aa0; opacity:.95; margin:0 0 12px;
+    font-size:clamp(16px,2.8vw,22px);
+  }
+  .cheer-illust{ width:min(360px,60vw); height:auto; margin:10px auto 18px; display:block; }
+  /* 모달 CTA 버튼을 알약 형태로 */
+  .modal-cta{
+    background: var(--yellow);
+    color: var(--bg);                 /* 보라색 글자 */
+    font-family: "GmarketSansBold","Noto Sans KR",sans-serif;
+    font-size: 18px;
+    padding: 14px 28px;
+    border-radius: 14px;            /* 완전 알약 */
+    border: 0;
+    box-shadow: 0 10px 16px rgba(0,0,0,.18); /* 부드러운 하단 그림자 */
+  }
+
+  body.modal-lock{ overflow:hidden; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <!-- HERO -->
+    <section class="hero center" aria-label="상단">
+      <img class="badge" src="./images/title.png" alt="1만 시간의 법칙">
+      <img class="clock" src="./images/clock.png" alt="" aria-hidden="true">
+      <p class="slogan">“연습은 어제의 당신보다 당신을 더 낫게 만든다.”</p>
+    </section>
+
+    <!-- 설명 (따옴표 이미지 포함) -->
+    <section class="rule center" aria-label="법칙 설명">
+      <img class="rule-quotes" src="./images/quotes.png" alt="" aria-hidden="true">
+      <div class="rule-text">
+        <h2>1만 시간의 법칙은</h2>
+        <p>어떤 분야의 전문가가 되기 위해서는<br>최소한 1만 시간의 훈련이 필요하다는 법칙이다.</p>
+      </div>
+    </section>
+
+    <!-- 문장형 입력 -->
+    <form id="calc" class="sentence" autocomplete="off">
+      나는
+      <span class="chip-input">
+        <label for="field" class="sr-only">분야</label>
+        <input id="field" name="field" type="text" placeholder="예) 프로그래밍" required>
+      </span>
+      전문가가 될 것이다.
+      <br><br>
+      그래서 앞으로 매일 하루에
+      <span class="chip-input">
+        <label for="hours" class="sr-only">하루 훈련 시간</label>
+        <input id="hours" name="hours" type="number" min="0.1" step="0.1" placeholder="예) 5시간" required>
+      </span>
+      시간씩 훈련할 것이다.
+      <br>
+      <div class="cta-wrap">
+        <button class="cta" type="submit">나는 며칠 동안 훈련을 해야 1만 시간이 될까?</button>
+        <img class="cta-hand" src="./images/click.png" alt="" aria-hidden="true">
+      </div>
+    </form>
+
+    <!-- 결과 (항상 보임) -->
+    <section id="result" class="result" aria-live="polite">
+      <p class="l1">
+        <span class="t-muted">당신은</span>
+        <span class="t-major">프로그래밍</span>
+        <span class="t-muted">전문가가 되기 위해서</span>
+      </p>
+      <p class="l2">
+        <span class="t-muted">대략</span>
+        <span id="outDays" class="days">0</span>
+        <span class="t-muted">일 이상 훈련하셔야 합니다! :)</span>
+      </p>
+    </section>
+
+    <!-- 하단 버튼 -->
+    <div class="actions">
+      <button id="goBtn" class="btn btn-go" type="button">훈련하러 가기 GO! GO!</button>
+      <button id="shareBtn" class="btn btn-share" type="button">공유하기</button>
+    </div>
+
+    <!-- 로고/푸터 -->
+    <p class="center"><img src="./images/logo.png" alt="weniv" width="150" height="15"></p>
+    <p class="foot">본 서비스 내 이미지 및 콘텐츠의 저작권은 주식회사 위니브에 있습니다.<br/>수정 및 재배포, 무단 도용 시 법적인 문제가 발생할 수 있습니다.</p>
+  </div>
+
+  <!-- === 응원 모달(추가된 부분) === -->
+  <div id="cheerModal" class="modal" aria-hidden="true" role="dialog"
+       aria-modal="true" aria-labelledby="cheerTitle" aria-describedby="cheerDesc">
+    <div class="modal-card" role="document">
+      <button class="modal-close" aria-label="닫기">×</button>
+      <h3 id="cheerTitle" class="cheer-title">화이팅!!! <span class="hearts">♥♥♥</span></h3>
+      <p id="cheerDesc" class="cheer-sub">당신의 꿈을 응원합니다!</p>
+      <img class="cheer-illust" src="./images/licat.png" alt="응원하는 라이언 그림" />
+      <button id="cheerOk" class="btn btn-go modal-cta" type="button">
+        종료하고 진짜 훈련하러 가기 GO!GO!
+      </button>
+    </div>
+  </div>
+
+<script>
+  const $ = (s)=>document.querySelector(s);
+  const form = $('#calc');
+
+  // 숫자만 갱신
+  form.addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const hours = parseFloat($('#hours').value);
+    if (!hours || hours <= 0){
+      alert('하루 훈련 시간을 0보다 크게 입력해주세요.');
+      return;
+    }
+    const days = Math.ceil(10000 / hours);
+    $('#outDays').textContent = days.toLocaleString('ko-KR');
+  });
+
+  // 공유
+  $('#shareBtn').addEventListener('click', async ()=>{
+    const txt = `나는 매일 ${$('#hours').value||'?'}시간 훈련하면, 프로그래밍까지 약 ${$('#outDays').textContent||'0'}일! #1만시간의법칙`;
+    try{
+      if(navigator.share){
+        await navigator.share({ title: document.title, text: txt, url: location.href });
+      }else{
+        await navigator.clipboard.writeText(location.href);
+        alert('링크를 클립보드에 복사했어요.');
+      }
+    }catch(_){}
+  });
+
+  // === 응원 모달 ===
+  const goBtn = document.getElementById('goBtn');
+  const modal = document.getElementById('cheerModal');
+  const okBtn = document.getElementById('cheerOk');
+  const xBtn  = modal.querySelector('.modal-close');
+
+  function openModal(){
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-lock');
+  }
+  function closeModal(){
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden','true');
+    document.body.classList.remove('modal-lock');
+  }
+
+  goBtn.addEventListener('click', openModal);
+  okBtn.addEventListener('click', closeModal);
+  xBtn.addEventListener('click', closeModal);
+  modal.addEventListener('click', (e)=>{ if(e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
